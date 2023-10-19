@@ -27,10 +27,16 @@ async function run() {
     await client.connect();
 
     const carCollection = client.db('carsDB').collection('cars');
+    const myCarCollection = client.db('carsDB').collection('myCar');
 
     app.post('/car', async(req, res) => {
       const car = req.body;
       const result = await carCollection.insertOne(car);
+      res.send(result);
+    })
+    app.post('/myCar', async(req, res) => {
+      const myCar = req.body;
+      const result = await myCarCollection.insertOne(myCar);
       res.send(result);
     })
 
@@ -93,7 +99,6 @@ async function run() {
       const filter = {_id: new ObjectId(id)}
       const options = { upsert: true };
       const updateCar = req.body;
-      console.log(updateData);
       const updateData = {
         $set: {
           brand: updateCar.brand,
@@ -109,6 +114,8 @@ async function run() {
       const result = await carCollection.updateOne(filter, updateData, options);
       res.send(result);
     })
+
+    
 
 
     // Send a ping to confirm a successful connection
